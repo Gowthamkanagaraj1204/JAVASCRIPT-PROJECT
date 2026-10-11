@@ -1,0 +1,211 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title style="background-color: blueviolet;">Student Registration</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 30px;
+        }
+
+        input, button {
+            padding: 10px;
+            margin: 5px;
+            background-color: yellowgreen;
+        }
+
+        table {
+            border-collapse: collapse;
+            margin-top: 20px;
+            width: 100%;
+            color: green;
+        }
+
+        th, td {
+            border: 1px solid black;
+            padding: 10px;
+            text-align: left;
+            color: #000000;
+        }
+
+        th {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>Student Registration</h2>
+
+    <div id="form">
+        <input type="text" id="name"
+               placeholder="Enter your name">
+        <button onclick="next()">Next</button>
+    </div>
+
+    <h2>Recorded Student Details</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Age</th>
+                <th>city</th>
+                <th>contact</th>
+            </tr>
+        </thead>
+        <tbody id="records"></tbody>
+    </table>
+
+    <script>
+        let step = 1;
+        let name, email, age ,city, contact;
+
+        // Load saved records when the page opens
+        let students = JSON.parse(
+            localStorage.getItem("students") || "[]"
+        );
+
+        displayRecords();
+
+        function next() {
+            if (step === 1) {
+                name = document.getElementById("name").value.trim();
+
+                if (name === "") {
+                    alert("Please enter your name");
+                    return;
+                }
+
+                document.getElementById("form").innerHTML = `
+                    <input type="email" id="email"
+                           placeholder="Enter your email">
+                    <button onclick="next()">Next</button>
+                `;
+
+                step = 2;
+            }
+            else if (step === 2) {
+                email = document.getElementById("email").value.trim();
+
+                if (email === "") {
+                    alert("Please enter your email");
+                    return;
+                }
+
+                document.getElementById("form").innerHTML = `
+                    <input type="number" id="age"
+                           placeholder="Enter your age">
+                    <button onclick="next()">Submit</button>
+                `;
+
+                step = 3;
+            }
+            else if (step === 3) {
+                age = document.getElementById("age").value.trim();
+
+                if (age === "" || Number(age) < 1 ||
+                    !Number.isInteger(Number(age))) {
+                    alert("Please enter a valid age");
+                    return;
+                }
+
+                document.getElementById("form").innerHTML = `
+                    <input type="string" id="city"
+                           placeholder="Enter your city">
+                    <button onclick="next()">Submit</button>
+                `;
+
+                step = 4;
+            }
+            else if (step === 4) {
+                    city = document.getElementById("city").value.trim();
+
+                    if (city === ""){
+                    alert("please enter your city")
+                    return;
+                }
+
+                document.getElementById("form").innerHTML = `
+                    <input type="number" id="contact"
+                           placeholder="Enter your contact">
+                    <button onclick="next()">Next</button>
+                `; 
+   
+               step = 5;
+            }
+            else if (step ===5){
+                    contact = document.getElementById("contact").value.train();
+
+                    if (contact === ""){
+                        alert("please enter your contact")
+                        return;
+                    }
+                
+                // Save student details
+                students.push({
+                    name: name,
+                    email: email,
+                    age: age,
+                    city: city,
+                    contact:contact
+                });   
+          
+                // Store records in browser
+                localStorage.setItem(
+                    "students",
+                    JSON.stringify(students)
+                );
+
+                // Display records in the table
+                displayRecords();
+
+                alert("Student details recorded successfully!");
+
+                // Reset form for the next student
+                step = 1;
+
+                document.getElementById("form").innerHTML = `
+                    <input type="text" id="name"
+                           placeholder="Enter your name">
+                    <button onclick="next()">Next</button>
+                `;
+            }
+        }
+
+        function displayRecords() {
+            let output = "";
+
+            students.forEach(function(student) {
+                output += `
+                    <tr>
+                        <td>${escapeHtml(student.name)}</td>
+                        <td>${escapeHtml(student.email)}</td>
+                        <td>${escapeHtml(student.age)}</td>
+                        <td>${escapeHtml(student.city)}</td>
+                        <td>${escapeHtml(student.contact)}</td>
+                    </tr>
+                `;
+            });
+
+            document.getElementById("records").innerHTML = output;
+        }
+
+        function escapeHtml(value) {
+            return String(value).replace(/[&<>"']/g, function(char) {
+                return {
+                    "&": "&amp;",
+                    "<": "&lt;",
+                    ">": "&gt;",
+                    '"': "&quot;",
+                    "'": "&#39;"
+                }[char];
+            });
+        }
+    </script>
+
+</body>
+</html>
