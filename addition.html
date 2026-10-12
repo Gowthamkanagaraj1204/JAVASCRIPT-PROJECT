@@ -19,7 +19,7 @@
 
 </script>
 </body>
----------------------------------
+
 
 <input id = "numb1" value= 50>
 <input id = "numb2" value= 80>
@@ -36,6 +36,26 @@
         var boxx1_value = Number(boxx1.value)
         var boxx2_value = Number(boxx2.value)
         var total =boxx1_value - boxx2_value
+        result.textContent=total
+    }
+
+</script>
+
+<input id = "inpu1" value= 50>
+<input id = "inpu2" value= 80>
+<button onclick="resu1()">MUL</button>
+<p id = "output">output</p>
+
+<script> 
+    var boxe1 = document.getElementById("inpu1")
+    var boxe2 = document.getElementById("inpu2")
+    var out = document.getElementById("output")
+
+    function resu1()
+    {
+        var boxe1_value = Number(boxe1.value)
+        var boxe2_value = Number(boxe2.value)
+        var total =boxe1_value * boxe2_value
         result.textContent=total
     }
 
